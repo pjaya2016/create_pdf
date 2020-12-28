@@ -27,7 +27,7 @@ public class PDFUtil {
             String[] arry = code.getCode().split("(?!<\\+>)[;](?=<\\+>)");
             for (int i = 0; i < arry.length; i++) {
                 Pattern pattern = Pattern.compile("([<+>]+)[\\w\\S].*([<+>])");
-                Matcher matcher = pattern.matcher(arry[i].trim());
+                Matcher matcher = pattern.matcher(arry[i]);
                 while (matcher.find()) {
                     ExtractToken(matcher.group());
                 }
@@ -59,7 +59,7 @@ public class PDFUtil {
 
     private void appendParagraph(String group) {
         try {
-            Pattern pattern = Pattern.compile("(?!=<key-sentence>)[A-z0-9!\"£$%^&*(){}\\[\\]@;:?/`¬,\\s~]+(?=<\\/key-sentence>)");
+            Pattern pattern = Pattern.compile("(?!=<key-sentence>)[A-z0-9!\"£$%^&*(){}\\[\\]@;:?/`¬,()~|#\\s+=]+(?=<\\/key-sentence>)");
             String[] arr = group.split("(?!<\\/key-paragraph>)[~\\s]+(?=<key\\-paragraph>)");
             for (int i = 0; i < arr.length; i++) {
                 Paragraph paragraph = new Paragraph();
@@ -67,7 +67,7 @@ public class PDFUtil {
                     doc.add(new Paragraph("\n"));
                 }
                 try {
-                    Matcher matcher = pattern.matcher(arr[i].trim());
+                    Matcher matcher = pattern.matcher(arr[i]);
                     while (matcher.find()) {
                         String val = matcher.group();
                         Chunk chunk = new Chunk(matcher.group());
@@ -85,8 +85,8 @@ public class PDFUtil {
     }
 
     private void appendSentence(String group) {
-        Pattern pattern = Pattern.compile("(?!=<key-sentence>)[A-z0-9!\"£$%^&*(){}\\[\\]@;:?/`¬,\\s]+(?=<\\/key-sentence>)");
-        String[] arr = group.split(" ");
+        Pattern pattern = Pattern.compile("(?!=<key-sentence>)[A-z0-9!\"£$%^&*(){}\\[\\]@;:?/`¬,()~|#\\s]+(?=<\\/key-sentence>)");
+        String[] arr = group.split("(?!>)[~ ]+(?=<)");
         for (int i = 0; i < arr.length; i++) {
             try {
                 Matcher matcher = pattern.matcher(arr[i]);
